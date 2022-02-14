@@ -1,6 +1,8 @@
 package com.codegym.model;
 
-public abstract class Employee {
+import java.io.Serializable;
+
+public abstract class Employee implements Serializable {
     private String id;
     private String name;
     private String sex;
@@ -20,6 +22,7 @@ public abstract class Employee {
         this.workingStatus = workingStatus;
         this.level = level;
     }
+
 
     public Employee(String id, String name, String sex, String dateOfBirth, String hometown,
                     String identity, String phone, double level, boolean workingStatus) {
@@ -98,12 +101,12 @@ public abstract class Employee {
         this.level = level;
     }
 
-    public abstract double salaryCaculator();
+    public abstract double salaryCaculator(double level);
 
     @Override
     public String toString() {
-        return id + ", " + name + ", " + sex + ", " + dateOfBirth + ", " + hometown
-                + ", " + identity + ", " + ", " + phone + level + ", " + workingStatus;
-
+        return "ID:" + id + ", name:" + name + ", level:" + level;
+//        return id + ", " + name + ", " + sex + ", " + dateOfBirth + ", " + hometown
+//                + ", " + identity + ", " + phone + ", " + level;
     }
 }

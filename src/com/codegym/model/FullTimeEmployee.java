@@ -5,9 +5,12 @@ public class FullTimeEmployee extends Employee{
         super(id, name, workingStatus, level);
     }
 
+    public FullTimeEmployee() {
+    }
+
     @Override
-    public double salaryCaculator() {
-        return getLevel()*500000;
+    public double salaryCaculator(double level) {
+        return 1000+level*50;
     }
 
     @Override

@@ -1,4 +1,8 @@
-package com.codegym.model;
+package com.codegym.controller;
+
+import com.codegym.model.Employee;
+import com.codegym.model.FullTimeEmployee;
+import com.codegym.model.PartTimeEmployee;
 
 import java.util.ArrayList;
 import java.util.List;

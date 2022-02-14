@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserManagement implements WriteFile, ReadFile {
-    List <User> users = new ArrayList<>();
+    List<User> users = new ArrayList<>();
 
     public UserManagement() {
         File file = new File("user.txt");
-        if (file.exists()){
+        if (file.exists()) {
             try {
                 readFile("user.txt");
             } catch (IOException e) {
@@ -22,12 +22,17 @@ public class UserManagement implements WriteFile, ReadFile {
         }
     }
 
-    public void displayAll () {
-        for (User user:users) {
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void displayAll() {
+        for (User user : users) {
             System.out.println(user);
         }
     }
-    public void register (User user) {
+
+    public void register(User user) {
         this.users.add(user);
         try {
             writeFile("user.txt");
@@ -49,24 +54,35 @@ public class UserManagement implements WriteFile, ReadFile {
         ObjectOutputStream oos = new ObjectOutputStream(os);
         oos.writeObject(this.users);
     }
-    public boolean checkUserNameExist (String userName){
+
+    public boolean checkUserNameExist(String userName) {
         boolean isExist = false;
         for (int i = 0; i < users.size(); i++) {
-            if (users.get(i).getUserName().equals(userName)){
+            if (users.get(i).getUserName().equals(userName)) {
                 isExist = true;
                 break;
             }
         }
         return isExist;
     }
-    public boolean checkLogin (String userName, String pasWord){
-        boolean isLogin = false;
-        for (int i = 0; i < users.size(); i++) {
-            if (userName.equals(users.get(i).getUserName())&&pasWord.equals(users.get(i).getPassword())){
-                isLogin = true;
-                break;
+
+//    public boolean checkLogin(String userName, String pasWord) {
+//        boolean isLogin = false;
+//        for (int i = 0; i < users.size(); i++) {
+//            if (userName.equals(users.get(i).getUserName()) && pasWord.equals(users.get(i).getPassword())) {
+//                isLogin = true;
+//                break;
+//            }
+//        }
+//        return isLogin;
+//    }
+
+    public User login(String userName, String pasWord) {
+        for (User user : users) {
+            if (userName.equals(user.getUserName()) && pasWord.equals(user.getPassword())) {
+                return user;
             }
         }
-        return isLogin;
+        return null;
     }
 }

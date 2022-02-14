@@ -2,11 +2,25 @@ package com.codegym.controller;
 
 import com.codegym.model.Employee;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EmployeeManagement {
+public class EmployeeManagement implements ReadFile, WriteFile{
     private List<Employee> employees = new ArrayList<>();
+
+    public EmployeeManagement() {
+        File file = new File("employee.txt");
+        if (file.exists()){
+            try {
+                readFile("employee.txt");
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     public List<Employee> getEmployees() {
         return employees;
@@ -29,6 +43,11 @@ public class EmployeeManagement {
 
     public void addEmployee(Employee employee) {
         employees.add(employee);
+        try {
+            writeFile("employee.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public int findEmployeeByName(String name) {
@@ -66,9 +85,37 @@ public class EmployeeManagement {
 
     }
 
-    public double salaryCaculator(String name) {
+    public double searchSalaRyByName(String name) {
         int index = findEmployeeByName(name);
-        double salary = employees.get(index).salaryCaculator();
+        double salary = employees.get(index).salaryCaculator(employees.get(index).getLevel());
         return salary;
+    }
+
+    @Override
+    public void readFile(String path) throws IOException, ClassNotFoundException {
+        InputStream is = new FileInputStream(path);
+        ObjectInputStream ois = new ObjectInputStream(is);
+        this.employees = (List<Employee>) ois.readObject();
+    }
+
+    @Override
+    public void writeFile(String path) throws IOException {
+        OutputStream os = new FileOutputStream(path);
+        ObjectOutputStream oos = new ObjectOutputStream(os);
+        oos.writeObject(this.employees);
+    }
+
+    public void displayWorkingEmplyoeeSalaryInfo(List<Employee> workingList) {
+        for (Employee employee:workingList) {
+            System.out.println(employee.getName() + ":  " + employee.salaryCaculator(employee.getLevel()) + " USD");
+        }
+    }
+
+    public double totalSalaryCayculator(List<Employee> workingList) {
+        double total = 0;
+        for (Employee employee:workingList) {
+            total += employee.salaryCaculator(employee.getLevel());
+        }
+        return total;
     }
 }
