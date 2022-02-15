@@ -69,8 +69,10 @@ public class EmployeeManagement implements ReadFile, WriteFile{
         int index = findEmployeeByName(name);
         if (employees.get(index).isWorkingStatus()) {
             employees.get(index).setWorkingStatus(false);
+            System.out.println("Đã cập nhật "+ name + " từ trạng thái làm việc => nghỉ việc");
         } else {
             employees.get(index).setWorkingStatus(true);
+            System.out.println("Đã cập nhật "+ name + " từ trạng thái nghỉ việc => làm việc");
         }
     }
 
@@ -117,5 +119,15 @@ public class EmployeeManagement implements ReadFile, WriteFile{
             total += employee.salaryCaculator(employee.getLevel());
         }
         return total;
+    }
+
+    public boolean checkIdExist (String id){
+        boolean isExist = false;
+        for (int i = 0; i < size(); i++) {
+            if (id.equals(employees.get(i).getId())){
+                isExist = true;
+            }
+        }
+        return isExist;
     }
 }

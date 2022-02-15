@@ -12,9 +12,9 @@ public class EmployeeManageMenu {
     public final String FULL_TIME = "Full time";
     public final String PART_TIME = "Part time";
     static Scanner scanner = new Scanner(System.in);
-
+    EmployeeManagement employeeManagement = new EmployeeManagement();
     public void run() {
-        EmployeeManagement employeeManagement = new EmployeeManagement();
+
 //        employeeManagement.addEmployee(new FullTimeEmployee("001", "Toan", true, 3.2));
 //        employeeManagement.addEmployee(new FullTimeEmployee("002", "Luyt", true, 3.1));
 //        employeeManagement.addEmployee(new FullTimeEmployee("003", "Lich", false, 3.0));
@@ -86,11 +86,7 @@ public class EmployeeManageMenu {
             switch (choiceSalary) {
                 case 1: {
                     System.out.println("---Tính lương nhân viên---");
-                    String contractType;
-                    do {
-                        System.out.println("Nhập loại hợp đồng làm việc (Full time / Part time)");
-                        contractType = scanner.nextLine();
-                    } while (!contractType.equals("Full time") && !contractType.equals("Part time"));
+                    String contractType = inputContractType();
                     System.out.println("Nhập level");
                     double level = scanner.nextDouble();
                     scanner.nextLine();
@@ -177,7 +173,7 @@ public class EmployeeManageMenu {
                     String name = scanner.nextLine();
                     int index = employeeManagement.findEmployeeByName(name);
                     if (index != -1) {
-                        Employee employee = inputEmployee(name);
+                        Employee employee = inputEmployee(name,true);
                         employeeManagement.updateEmployeeInfo(name, employee);
                         System.out.println("Cập nhật thành công");
                         System.out.println("---------------------");
@@ -195,8 +191,7 @@ public class EmployeeManageMenu {
                     int index = employeeManagement.findEmployeeByName(name);
                     if (index != -1) {
                         employeeManagement.updateEmployeeStatus(name);
-                        System.out.println("Cập nhật thành công");
-                        System.out.println("---------------------");
+                        System.out.println("-----------------------------------------------------");
                     } else {
                         System.out.println("Không có nhân viên có tên như bạn nhập");
                         System.out.println("---------------------------------------");
@@ -224,30 +219,31 @@ public class EmployeeManageMenu {
 
     private void showAddEmployee(EmployeeManagement employeeManagement) {
         System.out.println("---Thêm nhân viên---");
-        Employee employee = inputEmployee();
+        Employee employee = inputEmployee(false);
         employeeManagement.addEmployee(employee);
         System.out.println(" Thêm nhân viên thành công!!!");
         System.out.println("------------------------------");
     }
 
+    public Employee inputEmployee(boolean allowsDuplicateId) {
+        System.out.println("Nhập tên nhân viên");
+        String name = scanner.nextLine();
+        return inputEmployee(name, allowsDuplicateId);
+    }
     public Employee inputEmployee() {
         System.out.println("Nhập tên nhân viên");
         String name = scanner.nextLine();
         return inputEmployee(name);
     }
+    public Employee inputEmployee(String name){
+        return inputEmployee(name, true);
+    }
 
-    public Employee inputEmployee(String name) {
+    public Employee inputEmployee(String name, boolean allowsDuplicateId) {
         Employee employee = null;
         System.out.println("Nhập thông tin nhân viên");
-        System.out.println("Nhập mã số nhân viên");
-        String id = scanner.nextLine();
-        String contractType;
-
-        do {
-            System.out.println("Nhập loại hợp đồng làm việc (Full time / Part time)");
-            contractType = scanner.nextLine();
-
-        } while (!contractType.equals("Full time") && !contractType.equals("Part time"));
+        String id = inputEmployeeID(allowsDuplicateId);
+        String contractType = inputContractType();
         System.out.println("Nhập level nhân viên");
         double level = scanner.nextDouble();
         scanner.nextLine();
@@ -264,6 +260,32 @@ public class EmployeeManageMenu {
         }
 
         return employee;
+    }
+
+    private String inputContractType() {
+        String contractType;
+        do {
+            System.out.println("Nhập loại hợp đồng làm việc (Full time / Part time)");
+            contractType = scanner.nextLine();
+
+        } while (!contractType.equals("Full time") && !contractType.equals("Part time"));
+        return contractType;
+    }
+
+    private String inputEmployeeID(boolean allowsDuplicateId) {
+        String id;
+        boolean invalidInput;
+        do {
+            System.out.println("Nhập mã số nhân viên");
+            id = scanner.nextLine();
+            boolean idExist = employeeManagement.checkIdExist(id);
+            invalidInput = !allowsDuplicateId && idExist;
+
+            if (invalidInput){
+                System.err.println("ID trùng");
+            }
+        }while (invalidInput);
+        return id;
     }
 
     private void findEmployeeByName(EmployeeManagement employeeManagement) {
